@@ -1,0 +1,135 @@
+<div class="page-content d-flex justify-content-end">
+  <button type="button" class="btn btn-light" data-bs-toggle="modal"
+    data-bs-target="#exampleExtraLargeModal">Добавить</button>
+
+  <div class="modal fade" id="exampleExtraLargeModal" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавление атрибута</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/atribute/addAtribute" method="post">
+            <input type="hidden" name="_csrf" value="{{csrf}}">
+            {{!-- <label class="form-label"></label> --}}
+            <div class="row">
+              <div class="col-6">
+                <select class="single__select mb-3 col-6" name="subcategory" required>
+                  <option selected>Выберите субкатегорию...</option>
+                  {{#each subcategory}}
+                  <option value="{{_id}}">{{category.title}} | {{subTitle}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control mb-3" name="material" placeholder="Материал" required>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control mb-3" name="price" placeholder="Цена" required>
+              </div>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="submit" class="btn btn-primary">Добавить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-body">
+  <table class="table mb-0 table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Атрибут</th>
+        <th scope="col">Cубкатегории</th>
+        <th scope="col">Категории</th>
+        <th scope="col">Статус</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each atribute}}
+      <tr>
+        <td scope="row" style="padding-top: 15px;">{{index}}</td>
+        <td scope="row" style="padding-top: 15px;">{{title}}</td>
+        <td style="padding-top: 15px;">{{subcategory.subTitle}}</td>
+        <td style="padding-top: 15px;">{{subcategory.category.title}}</td>
+        <td style="padding-top: 15px;"><span class="badge {{class}}">{{status}}</span></td>
+        <td class="text-right d-flex justify-content-end">
+          <a href="/atribute/delete/{{_id}}" class="mr-3" style="padding-top: 7px; padding-right: 15px;"><svg
+              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-trash text-danger">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </a>
+          <button class="btn ml-3" onclick="edit('{{_id}}')" data-bs-toggle="modal" data-bs-target="#updatesubcategory">
+            <i class="fadeIn animated bx bx-pencil text-white"></i>
+          </button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="updatesubcategory" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-gradient">
+      <div class="modal-header">
+        <h5 class="modal-title">Добавление атрибута</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/atribute/save" name="editForm" method="post">
+          <input type="hidden" name="_csrf" value="{{csrf}}">
+          <input type="hidden" name="_id" value="">
+          {{!-- <label class="form-label"></label> --}}
+          <div class="mb-3 select2-sm">
+            <select class="single__select mb-3" name="subcategory">
+              <option selected>Выберите категорию...</option>
+              {{#each subcategory}}
+              <option value="{{_id}}">{{subTitle}} || {{category.title}}</option>
+              {{/each}}
+            </select>
+            <input type="text" class="form-control mb-3" name="title" placeholder="Атрибут...">
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let editForm = document.forms.editForm
+
+  function edit(id) {
+    fetch(`/atribute/edit/${id}`)
+      .then(res => res.json())
+      .then(atribute => {
+        editForm._id.value = id
+        editForm.subcategory.value = atribute.subcategory
+        editForm.status.checked = atribute.status == 1 ? true : false
+        editForm.title.value = atribute.title
+      })
+  }
+</script>

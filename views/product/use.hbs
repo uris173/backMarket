@@ -1,0 +1,121 @@
+<div class="page-content">
+  <form action="/product/newproduct?_csrf={{csrf}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="inside" value="" id="inside">
+    <input type="hidden" name="_id" value="">
+    <div class="row">
+      <div class="col-4">
+        <select class="single__select mb-3 col-6" name="subcategory" required>
+          <option selected>Выберите субкатегорию...</option>
+          {{#each subcategory}}
+          <option value="{{_id}}">{{category.title}} | {{subTitle}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control mb-3" name="material" placeholder="Материал" required>
+      </div>
+      <div class="col-4">
+        <input type="text" class="form-control mb-3" name="price" placeholder="Цена" required>
+      </div>
+      <div class="col-12">
+        <textarea type="text" rows="5" class="form-control mb-3" name="comment" placeholder="Цена" required></textarea>
+      </div>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+      <label class="form-check-label " for="flexSwitchCheckDefault">Активность</label>
+    </div>
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-light" style="margin-top: 50px;">Добавить</button>
+    </div>
+  </form>
+</div>
+
+<script>
+
+  {{!-- let img = document.getElementById('image')
+  let inside1 = document.getElementById('inside1')
+  let count = 0
+
+  function next() {
+    count++
+
+    if (count < 6) {
+      let div = document.createElement('div')
+      div.classList.add('row')
+      div.classList.add('d-flex')
+      div.classList.add('align-items-center')
+      div.classList.add('mb-3')
+      inside1.appendChild(div)
+
+      let colorDiv = document.createElement('div')
+      colorDiv.classList.add('col-2')
+      div.appendChild(colorDiv)
+      let color = document.createElement('input')
+      color.setAttribute('type', 'color')
+      color.setAttribute('name', 'color')
+      color.classList.add('form-control')
+      colorDiv.appendChild(color)
+
+      let fileDiv = document.createElement('div')
+      fileDiv.classList.add('col-4')
+      div.appendChild(fileDiv)
+      let file = document.createElement('input')
+      file.setAttribute('type', 'file')
+      file.setAttribute('name', 'img')
+      file.setAttribute('multiple', 'true')
+      file.classList.add('form-control')
+      fileDiv.appendChild(file)
+
+      let sizeDiv = document.createElement('div')
+      sizeDiv.classList.add('col-5')
+      div.appendChild(sizeDiv)
+      let size = document.createElement('input')
+      size.setAttribute('type', 'text')
+      size.setAttribute('name', 'size')
+      size.setAttribute('placeholder', 'Размеры. (Писать через запятую "L, XL, XXL" и т.д.)')
+      size.classList.add('form-control')
+      sizeDiv.appendChild(size)
+
+      let nextDiv = document.createElement('div')
+      nextDiv.classList.add('col-1')
+      nextDiv.classList.add('d-flex')
+      nextDiv.classList.add('justify-content-end')
+      div.appendChild(nextDiv)
+      let nextb = document.createElement('button')
+      nextb.setAttribute('type', 'button')
+      nextb.classList.add('btn')
+      nextb.classList.add('btn-light')
+      nextb.innerHTML = 'Далее'
+      nextb.addEventListener('click', next)
+      nextDiv.appendChild(nextb)
+    }
+  } 
+  
+
+
+  let newForm = document.forms.newProduct
+  let insides = document.getElementById('inside')
+  let product = []
+  newForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+
+    let collect = document.querySelectorAll('#inside1 input')
+
+    collect.forEach(item =>{
+      console.log(item.color.value)
+      if (item.value){
+        let col = document.getElementsByName("color")
+        product.push({
+          color: item.value,
+          img: item.value,
+          size: item.value
+        })
+      } 
+      console.log(product) 
+      insides.value = JSON.stringify(product) 
+    })
+    newForm.submit() 
+  }) --}}
+</script>

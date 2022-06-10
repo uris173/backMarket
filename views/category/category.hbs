@@ -1,0 +1,130 @@
+<div class="page-content">
+  <div class="d-flex justify-content-end">
+  <button type="button" class="btn btn-light" data-bs-toggle="modal"
+    data-bs-target="#exampleVerticallycenteredModal">Добавить</button>
+
+    <div class="modal fade" id="exampleVerticallycenteredModal" tabindex="-1" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-gradient">
+          <div class="modal-header">
+            <h5 class="modal-title">Добавление категории</h5>
+            <button type="button" onclick="resetF()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+          <form action="/category/addCategory?_csrf={{csrf}}" name="reset" method="post" enctype="multipart/form-data"> 
+            {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
+            <input type="text" class="form-control mb-3" name="title" placeholder="Добавить категорию">
+            <input type="text" class="form-control mb-3" name="slug" placeholder="Добавить ссылку">
+            <input type="file" class="form-control mb-3" name="img">
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+<div class="card-body">
+  <table class="table mb-0 table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Категории</th>
+        <th scope="col">Ссылка</th>
+        <th scope="col">Фотография</th>
+        <th scope="col">Статус</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each category}}
+      <tr>
+        <td scope="row" style="padding-top: 20px;">{{index}}</td>
+        <td style="padding-top: 20px;">{{title}}</td>
+        <td style="padding-top: 20px;">{{slug}}</td>
+        <td><img class="editImg" src="/{{img}}" alt=""></td>
+        <td style="padding-top: 20px;"><span class="badge {{class}}">{{status}}</span></td>
+        <td class="text-right">
+          <div class="buttons d-flex justify-content-end">
+            <a href="/category/delete/{{_id}}" class="mr-3" style="padding-top: 7px; padding-right: 20px;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-trash text-danger">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </a>
+            <button class="btn ml-3 none__btn" onclick="edit('{{_id}}')" data-bs-toggle="modal" data-bs-target="#updatecategory">
+              <i class="fadeIn animated bx bx-pencil text-white"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+    <div class="modal fade" id="updatecategory" aria-labelledby="editcat" aria-hidden="true" tabindex="-1" style="display: none;">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-gradient">
+          <div class="modal-header">
+            <h5 class="modal-title">Изменение категории</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/category/save?_csrf={{csrf}}" method="post" name="upform" enctype="multipart/form-data">
+            {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
+            <input type="hidden" name="_id">
+            <input type="text" name="title" class="form-control mb-3" placeholder="Изменить категорию">
+            <input type="text" name="slug" class="form-control mb-3" placeholder="Изменить ссылку">
+            <input type="file" class="form-control mb-3" name="img">
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault"
+                value="1">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">Изменить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<style>
+  .none__btn:focus {
+    box-shadow: none;
+  }
+</style>
+
+<script>
+  let upForm = document.forms.upform
+  function edit(id){
+    fetch(`category/edit/${id}`)
+    .then(res=>res.json())
+    .then(category =>{
+      
+      upForm._id.value = id
+      upForm.title.value = category.title
+      upForm.slug.value = category.slug
+      upForm.status.checked = category.status == 1 ? true : false
+      console.log(category)
+    })
+  }
+
+  let resetForm = document.forms.reset
+
+  function resetF(){
+    resetForm.reset()
+  }
+</script>

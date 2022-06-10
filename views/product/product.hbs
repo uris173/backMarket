@@ -1,0 +1,328 @@
+<div class="page-content d-flex justify-content-end">
+  <div class="success" style="margin-right: 30px;">
+    {{#if success}}
+    <div class="d-flex bg-success align-items-center bg-gradient text-center"
+      style="border: 1px; border-radius: 5px; height: 38px; padding: 0px 10px;" id="suck">{{success}}</div>
+    {{/if}}
+    {{#if error}}
+    <div class="d-flex bg-danger align-items-center bg-gradient text-center"
+      style="border: 1px; border-radius: 5px; height: 38px; padding: 0px 10px;" id="fuck">{{error}}</div>
+    {{/if}}
+  </div>
+
+  <div class="modal fade" id="change" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавление атрибута</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/product/changes?_csrf={{csrf}}" method="post" name="changes" enctype="multipart/form-data">
+            <input type="hidden" name="_id" value="">
+            <div>
+              <div class="row d-flex align-items-center mb-3">
+                <div class="col-2">
+                  <input type="color" class="form-control" name="color">
+                </div>
+                <div class="col-4">
+                  <input type="file" class="form-control" name="img" multiple>
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" name="size"
+                    placeholder='Размеры. (Писать через запятую "L, XL, XXL" и т.д.)'>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-light" style="margin-top: 50px;">Добавить изменения</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="newproduct" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавление продукта</h5>
+          <button type="button" class="btn-close" onclick="resetF()" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/product/newproduct?_csrf={{csrf}}" method="post" name="reset">
+          {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
+            <div class="row">
+              <div class="col-4">
+                <select class="single__select mb-3 col-6" name="category" id="category" required>
+                  <option selected>Выберите категорию...</option>
+                  {{#each category}}
+                  <option value="{{_id}}">{{title}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-4">
+                <select class="single__select mb-3 col-6" name="subcategory" id="subcategory" required>
+                 <option selected>Выберите субкатегорию...</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <input type="text" class="form-control mb-3" name="price" placeholder="Цена" required>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control mb-3" name="title" placeholder="Наименование" required>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control mb-3" name="material" placeholder="Материал" required>
+              </div>
+              <div class="col-12">
+                <textarea type="text" rows="5" class="form-control mb-3" name="comment" placeholder="Описание" required></textarea>
+              </div>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+              <label class="form-check-label " for="flexSwitchCheckDefault">Активность</label>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-light" style="margin-top: 50px;">Добавить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="edit" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Изменение продукта</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/product/save?_csrf={{csrf}}" method="post" name="editForm">
+            <input type="hidden" name="_id" value="">
+            <input type="hidden" name="inside" value="" id="inside">
+            <div class="row">
+              <div class="col-4">
+                <select class="single__select mb-3 col-6" name="category" id="editCategory" required>
+                  <option selected>Выберите категорию...</option>
+                  {{#each category}}
+                  <option value="{{_id}}">{{title}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="col-4">
+                <select class="single__select mb-3 col-6 textUpp" name="subcategory" id="editSubcategory" required>
+                  {{!-- <option selected>Выберите субкатегорию...</option> --}}
+                  {{!-- {{#each subcategory}}
+                  <option value="{{_id}}">{{subTitle}}</option>
+                  {{/each}} --}}
+                </select>
+              </div>
+              {{!-- <div class="col-3">
+                <select class="single__select mb-3 col-6" name="subcategory" required>
+                  <option selected>Выберите субкатегорию...</option>
+                  {{#each subcategory}}
+                  <option value="{{_id}}">{{category.title}} | {{subTitle}}</option>
+                  {{/each}}
+                </select>
+              </div> --}}
+              <div class="col-4">
+                <input type="text" class="form-control mb-3" name="price" placeholder="Цена" required>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control mb-3" name="title" placeholder="Наименование" required>
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control mb-3" name="material" placeholder="Материал" required>
+              </div>
+              <div class="col-12">
+                <textarea type="text" rows="5" class="form-control mb-3" name="comment" placeholder="Описание" required></textarea>
+              </div>
+            </div>
+            {{!-- <div>
+              <input type="hidden" name="_id" value="">
+              <div class="row d-flex align-items-center mb-3">
+                <div class="col-2">
+                  <input type="color" class="form-control" name="color">
+                </div>
+                <div class="col-4">
+                  <input type="file" class="form-control" name="img" multiple>
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" name="size"
+                    placeholder='Размеры. (Писать через запятую "L, XL, XXL" и т.д.)'>
+                </div>
+              </div>
+            </div> --}}
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-light" style="margin-top: 50px;">Добавить изменения</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-light ml-2" data-bs-toggle="modal" data-bs-target="#newproduct">Добавить</button>
+</div>
+<div class="card-body">
+  <table class="table mb-0 table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        {{!-- <th scope="col">Название</th> --}}
+        <th scope="col">Категории</th>
+        <th scope="col">Субкатегория</th>
+        <th scope="col">Наименование</th>
+        <th scope="col">Статус</th>
+        <th scope="col" style="width: 200px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each product}}
+      <tr class="textUpp">
+        <td scope="row" style="padding-top: 15px;">{{index}}</td>
+        <td style="padding-top: 15px;">{{subcategory.category.title}}</td>
+        <td class="textUpp" style="padding-top: 15px;">{{subcategory.subTitle}}</td>
+        <td style="padding-top: 15px; width: 600px;">{{title}}</td>
+        <td style="padding-top: 15px;"><span class="badge {{class}}">{{status}}</span></td>
+        <td class="text-right pt-1" style="padding-left: 30px;">
+          <a href="/product/info/{{_id}}" style="padding-top: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye text-white"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </a>
+
+          <button class="btn ml-3 none__btn" onclick="change('{{_id}}')" data-bs-toggle="modal"
+            data-bs-target="#change">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-file-plus text-white">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+          </button>
+
+          <a href="/product/delete/{{_id}}" class="mr-3" style="padding-top: 7px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-trash text-danger">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </a>
+
+          <button class="btn ml-3 none__btn" onclick="editP('{{_id}}')" data-bs-toggle="modal" data-bs-target="#edit">
+            <i class="fadeIn animated bx bx-pencil text-white"></i>
+          </button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .none__btn:focus {
+    box-shadow: none;
+  }
+</style>
+
+<script>
+  if (document.getElementById("suck")) {
+    setTimeout(() => {
+      document.getElementById("suck").remove()
+    }, 5000)
+  }
+  if (document.getElementById("fuck")) {
+    setTimeout(() => {
+      document.getElementById("fuck").remove()
+    }, 5000)
+  }
+
+  let changes = document.forms.changes
+
+  function change(id) {
+    fetch(`/product/change/${id}`)
+    .then(res => res.json())
+    .then(product => {
+      changes._id.value = id
+    })
+  }
+
+  let editForm = document.forms.editForm
+  let editSub = document.getElementById('editSubcategory')
+  let editCategory = document.getElementById('editCategory')
+  let category = document.getElementById('category')
+  let subcategoryChange = document.getElementById('subcategory')
+
+  async function editP(id) {
+    await fetch(`/product/edit/${id}`)
+      .then(res => res.json())
+      .then(product => {
+        editForm._id.value = id
+        editForm.category.value = product.subcategory.category._id
+        if(product.subcategory.category._id){
+          let idpr = product.subcategory.category._id
+          editSub.innerHTML = '<option class="textUpp" selected>Выберите субкатегорию...</option>'
+          fetch(`/product/subCat/${idpr}`)
+          .then(res => res.json())
+          .then(subcategory =>{
+            subcategory.forEach(sub => {
+              editSub.innerHTML += `<option value="${sub._id}">${sub.subTitle}</option>`})
+            editForm.subcategory.value = product.subcategory._id
+          })
+        }
+        editCategory.addEventListener('change', (event)=>{
+          editSub.innerHTML = '<option class="textUpp" selected>Выберите субкатегорию...</option>'
+          let _id = event.target.value
+          console.log(_id)
+          fetch(`/product/prodCat/${_id}`)
+          .then(res => res.json())
+          .then(subcategory =>{
+            subcategory.forEach(sub => {
+            console.log(sub)
+              editSub.innerHTML += `<option class="textUpp" value="${sub._id}">${sub.subTitle}</option>`
+            })
+          })
+        })
+        editForm.material.value = product.material
+        editForm.title.value = product.title
+        editForm.price.value = product.price
+        editForm.comment.value = product.comment
+        editForm.status.checked = product.status == 1 ? true : false
+      })
+    }
+
+
+  let resetForm = document.forms.reset
+
+  function resetF(){
+    resetForm.reset()
+  }
+
+
+
+  category.addEventListener('change', (event)=>{
+    subcategoryChange.innerHTML = '<option class="textUpp" selected>Выберите субкатегорию...</option>'
+    let _id = event.target.value
+    fetch(`/product/prodCat/${_id}`)
+    .then(res => res.json())
+    .then(subcategory =>{
+      subcategory.forEach(sub => {
+        subcategoryChange.innerHTML += `
+        <option class="textUpp" value="${sub._id}">${sub.subTitle}</option>
+        `
+      })
+    })
+  })
+</script>

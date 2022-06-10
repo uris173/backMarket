@@ -1,0 +1,166 @@
+<div class="page-content d-flex justify-content-end">
+  
+  <div class="success" style="margin-right: 30px;">
+    {{#if success}}
+      <div class="d-flex bg-success align-items-center bg-gradient text-center" style="border: 1px; border-radius: 5px; height: 38px; padding: 0px 10px;" id="suck">{{success}}</div>
+    {{/if}}
+    {{#if error}}
+      <div class="d-flex bg-danger align-items-center bg-gradient text-center" style="border: 1px; border-radius: 5px; height: 38px; padding: 0px 10px;" id="fuck">{{error}}</div>
+    {{/if}}
+  </div>
+
+  <button type="button" class="btn btn-light ml-2" data-bs-toggle="modal"
+    data-bs-target="#exampleVerticallycenteredModal">Добавить</button>
+
+  <div class="modal fade" id="exampleVerticallycenteredModal" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавление субкатегории</h5>
+          <button type="button" class="btn-close" onclick="resetF()" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/subcategory/addSubcategory?_csrf={{csrf}}" name="reset" method="post">
+            {{!-- <input type="hidden" name="reset" value="{{csrf}}"> --}}
+            {{!-- <label class="form-label">Добавление субкатегории</label> --}}
+            <div class="mb-3 select2-sm">
+              <select class="single__select mb-3" name="category">
+                <option selected>Выберите категорию...</option>
+                {{#each category}}
+                <option value="{{_id}}">{{title}}</option>
+                {{/each}}
+              </select>
+              <input type="text" class="form-control mb-3" name="subTitle" placeholder="Название субкатегория">
+              <input type="text" class="form-control mb-3" name="slug" placeholder="Добавить ссылку">
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="submit" class="btn btn-primary">Добавить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card-body">
+  <table class="table mb-0 table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Cубкатегории</th>
+        <th scope="col">Категории</th>
+        <th scope="col">Ссылка</th>
+        <th scope="col">Статус</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each subcategory}}
+      <tr class="textUpp">
+        <td scope="row" style="padding-top: 15px;">{{index}}</td>
+        <td style="padding-top: 15px;">{{subTitle}}</td>
+        <td style="padding-top: 15px;">{{category.title}}</td>
+        <td style="padding-top: 15px;">{{slug}}</td>
+        <td style="padding-top: 15px;"><span class="badge {{class}}">{{status}}</span></td>
+        <td class="text-right">
+          <div class="buttons d-flex justify-content-end">
+            <a href="/subcategory/delete/{{_id}}" class="mr-3" style="padding-top: 7px; padding-right: 15px;"><svg
+                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-trash text-danger">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </a>
+            <button class="btn ml-3 none__btn" onclick="editF('{{_id}}')" data-bs-toggle="modal"
+              data-bs-target="#updatesubcategory">
+              <i class="fadeIn animated bx bx-pencil text-white"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="modal fade" id="updatesubcategory" aria-labelledby="editsubcat" aria-hidden="true" tabindex="-1"
+    style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Изменение субкатегории</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/subcategory/save" method="post" name="editform">
+            <input type="hidden" name="_csrf" value="{{csrf}}">
+            <input type="hidden" name="_id" value="">
+            {{!-- <label class="form-label">Изминение субкатегории</label> --}}
+            <select class="single__select mb-3" name="category">
+              <option selected>Выберите категорию...</option>
+              {{#each category}}
+              <option value="{{_id}}">{{title}}</option>
+              {{/each}}
+            </select>
+            <input type="text" name="subTitle" class="form-control mb-3" placeholder="Изменение субкатегории">
+            <input type="text" class="form-control mb-3" name="slug" placeholder="Добавить ссылку">
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="status" type="checkbox" id="flexSwitchCheckDefault" value="1">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Активность</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="submit" class="btn btn-primary">Изменить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .none__btn:focus {
+    box-shadow: none;
+  }
+</style>
+
+<script>
+  let editForm = document.forms.editform
+
+  function editF(id) {
+    fetch(`/subcategory/edit/${id}`)
+    .then(res => res.json())
+    .then(subcategory => {
+      editForm._id.value = id
+      editForm.subTitle.value = subcategory.subTitle
+      editForm.status.checked = subcategory.status == 1 ? true : false
+      editForm.category.value = subcategory.category
+      editForm.slug.value = subcategory.slug
+    })
+  }
+
+  if(document.getElementById("suck")){
+    setTimeout(()=>{
+      document.getElementById("suck").remove()
+    },5000)
+  }
+  if(document.getElementById("fuck")){
+    setTimeout(()=>{
+      document.getElementById("fuck").remove()
+    },5000)
+  }
+
+  let resetForm = document.forms.reset
+
+  function resetF(){
+    resetForm.reset()
+  }
+
+</script>

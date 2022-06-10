@@ -1,0 +1,61 @@
+.select {
+  display: flex;
+}
+
+.single__select {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #fff;
+  background-clip: padding-box;
+  -moz-appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  background-color: rgb(0 0 0 / 15%);
+}
+
+.single__select:focus {
+  background-color: #2b3035;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.none__btn:focus {
+  outline: none;
+}
+
+.color {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  margin-top: 12px;
+}
+
+.image:first-child{
+  width: 400px;
+}
+
+.editImg{
+  max-width: 70px;
+  height: 45px;
+}
+
+.size{
+  font-size: 18px;
+  margin-top: 8px;
+}
+.btn:focus{
+  box-shadow: unset;
+}
+.imgMenu{
+  max-height: 90px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.textUpp {
+  text-transform: capitalize;
+}

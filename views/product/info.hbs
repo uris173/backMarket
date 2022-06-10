@@ -1,0 +1,188 @@
+<div class="page-content">
+  <div class="card">
+    <div class="row g-0">
+      <div class="col-md-4 border-end image">
+        <img src="/{{imgFirst}}" class="img-fluid" style="display: block; margin: auto;">
+        <div class="row mb-3 row-cols-auto g-2 justify-content-center mt-3">
+          {{#each product.nextinside.img}}
+          <div class="col"><img src="/{{@this}}" width="70" class="imgMenu border rounded cursor-pointer" alt="">
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h4 class="card-title">{{product.title}}</h4>
+          <div class="mb-3">
+            <span class="price h4">{{product.price}}</span>
+            <span class="">сум</span>
+          </div>
+          <div class="mb-3">
+            <span class="price h4 textUpp">{{product.subcategory.category.title}} | {{product.subcategory.subTitle}}</span>
+          </div>
+          <p class="card-text fs-6">{{product.comment}}</p>
+          <hr>
+          <div class="align-items-center">
+            <div class="col">
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Размеры</label>
+              <div class="">
+                {{#each product.inside}}
+                <div class="card-text h6">{{size}}</div>
+                {{/each}}
+              </div>
+            </div>
+            <div class="col mb-3">
+              <label class="form-label">Цвета</label>
+              <div class="color-indigators d-flex align-items-center gap-2">
+                {{#each product.inside}}
+                <div class="color" style="background-color:{{color}};"></div>
+                {{/each}}
+                <a href="/product/info/{{_id}}" onclick="changeColor"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="edit" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-gradient">
+        <div class="modal-header">
+          <h5 class="modal-title">Изменение атрибута</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/product/info/editAtr?_csrf={{csrf}}" method="post" name="edit" enctype="multipart/form-data">
+            <input type="hidden" name="_id" value="">
+            <input type="hidden" name="index" value="">
+            <div id="inside">
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-light" style="margin-top: 50px;">Добавить изменения</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table mb-0 table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Цвета</th>
+        <th scope="col" style="width: 600px;">Фотография</th>
+        <th scope="col" style="width: 400px;">Размеры</th>
+        <th scope="col" style="width: 100px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each product.inside}}
+      <tr>
+        <td>
+          <div class="color" style="background-color:{{color}};"></div>
+        </td>
+        <td>
+          <div class="d-flex">
+            {{#each img}}
+            <img class="editImg" style="margin-right: 10px;" src="/{{@this}}" alt="">
+            {{/each}}
+          </div>
+        </td>
+        <td>
+          <div class="size">{{size}}</div>
+        </td>
+        <td class="">
+          <a href="/product/info/delete/{{@root.product._id}}/{{@index}}" class="mr-3" style="padding-top: 7px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-trash text-danger">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </a>
+
+          <button class="btn ml-3 none__btn" onclick="editInside('{{@root.product._id}}', {{@index}})"
+            data-bs-toggle="modal" data-bs-target="#edit">
+            <i class="fadeIn animated bx bx-pencil text-white"></i>
+          </button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+</div>
+
+
+<script>
+  let edit = document.forms.edit
+  let inside = document.getElementById('inside')
+
+  async function editInside(id, index) {
+    inside.innerHTML = '';
+    await fetch(`/product/infoInside/${id}/${index}`)
+      .then(res => res.json())
+      .then(fIndex => {
+
+        console.log(fIndex)
+
+        let div = document.createElement('div')
+        div.classList.add('row')
+        div.classList.add('d-flex')
+        div.classList.add('align-items-center')
+        div.classList.add('mb-3')
+        inside.appendChild(div)
+
+        let colorDiv = document.createElement('div')
+        colorDiv.classList.add('col-2')
+        div.appendChild(colorDiv)
+        let color = document.createElement('input')
+        color.setAttribute('type', 'color')
+        color.setAttribute('name', 'color')
+        color.setAttribute('value', `${fIndex.color}`)
+        color.classList.add('form-control')
+        colorDiv.appendChild(color)
+
+        let imageDiv = document.createElement('div')
+        imageDiv.classList.add('col-4')
+        div.appendChild(imageDiv)
+
+        let image = document.createElement('input')
+        image.setAttribute('type', 'file')
+        image.setAttribute('name', 'img') 
+        image.setAttribute('multiple', 'multiple')
+        image.classList.add('form-control')
+        image.classList.add('mb-1')
+        imageDiv.appendChild(image)
+
+        let sizeDiv = document.createElement('div')
+        sizeDiv.classList.add('col-6')
+        div.appendChild(sizeDiv)
+        let size = document.createElement('input')
+        size.setAttribute('type', 'text')
+        size.setAttribute('name', 'size')
+        size.setAttribute('value', `${fIndex.size}`)
+        size.setAttribute('placeholder', 'Размеры. (Писать через запятую "L, XL, XXL" и т.д.)')
+        size.classList.add('form-control')
+        sizeDiv.appendChild(size)
+
+        edit._id.value = id
+        edit.index.value = index
+      })
+    }
+
+  let changes = document.forms.changes
+
+  function changeInfo(id) {
+    fetch(`/product/info/change/${id}`)
+    .then(res => res.json())
+    .then(product => {
+      console.log(product)
+      changes._id.value = id
+    })
+  }
+</script>

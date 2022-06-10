@@ -1,0 +1,56 @@
+<div class="container-fluid">
+	<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+		<div style="margin-left: 350px;">
+			<div class="card">
+				<div class="card-body">
+					<div class="border p-4 rounded">
+						<div class="text-center">
+							<h3 class="">Войти</h3>
+							<div class="form-body">
+								<form class="row g-3" method="post" action="/auth">
+									<input type="hidden" name="_csrf" value="{{csrf}}">
+									<div class="col-12">
+										<label for="inputEmailAddress" class="form-label">Имя</label>
+										<input type="text" class="form-control" id="inputEmailAddress" name="name">
+									</div>
+									<div class="col-12 mb-3">
+										<label for="inputChoosePassword" class="form-label">Пароль</label>
+										<div class="input-group" id="show_hide_password">
+											<input type="password" class="form-control border-end-0" name='password'>
+										</div>
+									</div>
+									{{!-- <div class="col-md-6">
+												<div class="form-check form-switch">
+													<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+													<label class="form-check-label" for="flexSwitchCheckChecked">Remember Me</label>
+												</div>
+											</div> --}}
+									{{!-- <div class="col-md-6 text-end">	<a href="authentication-forgot-password.html">Forgot Password ?</a>
+											</div> --}}
+									<div class="col-12">
+										<div class="d-grid">
+											<button type="submit" class="btn btn-light"><i class="bx bxs-lock-open"></i>Войти</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							{{#if error}}
+								<div class="d-flex bg-danger align-items-center bg-gradient text-center" style="border: 1px; border-radius: 5px; height: 38px; padding: 0px 10px; margin-top: 15px;" id="fuck">{{error}}</div>
+							{{/if}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end row-->
+	</div>
+
+
+	<script>
+		
+  if(document.getElementById("fuck")){
+    setTimeout(()=>{
+      document.getElementById("fuck").remove()
+    },3000)
+  }
+	</script>
