@@ -17,11 +17,11 @@ router.get('/all', async(req, res)=>{
   // Для получеия категории Man and Woman
 })
 
-router.get('/subcat/:id', async(req, res)=>{
-  let _id = req.params.id
-  let category = await Category.findOne({slug: _id}).lean()
-  let subcategory = await Subcategory.find({category: category}).select(['subTitle', 'slug']).where({status: 1}).lean()
-  // console.log(subcategory);
+router.get('/subcat/:slug', async(req, res)=>{
+  let _id = req.params.slug
+  // let category = await Category.findOne({_id}).lean()
+  let subcategory = await Subcategory.find({"category._id": _id}).select(['subTitle', 'slug']).where({status: 1}).lean()
+  console.log(_id, '1111');
   res.send(subcategory)
   // Для получени Субкатегориев в зависимотсти от Категория
 })
@@ -40,21 +40,20 @@ router.get('/getSub/', async(req, res)=>{
   res.send(product)
 })
 
-router.get('/catProducts/:id', async(req, res)=>{
-  let _id = req.params.id
-  let categoryMale = await Category.findOne({slug: _id}).lean()
-  let subcategory = await Subcategory.find({category: categoryMale._id}).lean()
-  console.log(categoryMale._id, '111');
-  let product = await Product.find({subcategory}).select(['title', 'price', 'inside']).where({status: 1}).lean()
-  product = product.map(prod =>{
-    prod.img = prod.inside[0].img[0]
-    prod.color = prod.inside.length
-    prod.img  = prod.img.split('image\\').join('')
-    return prod
-  })
-  res.send(product)
-  // Для получения Slug и надлежащик к Категории - Субкатегории и принадлежащие Продукты
-})
+// router.get('/catProducts/:id', async(req, res)=>{
+//   let _id = req.params.id
+//   let subcategory = await Subcategory.find({category: _id}).lean()
+//   console.log(categoryMale._id, '111');
+//   let product = await Product.find({subcategory}).select(['title', 'price', 'inside']).where({status: 1}).lean()
+//   product = product.map(prod =>{
+//     prod.img = prod.inside[0].img[0]
+//     prod.color = prod.inside.length
+//     prod.img  = prod.img.split('image\\').join('')
+//     return prod
+//   })
+//   res.send(product)
+//   // Для получения Slug и надлежащик к Категории - Субкатегории и принадлежащие Продукты
+// })
 
 
 
