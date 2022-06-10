@@ -18,43 +18,44 @@ router.get('/all', async(req, res)=>{
 })
 
 router.get('/subcat/:id', async(req, res)=>{
-  let categoryId = req.params.id
-  let categoryMale = await Category.findOne({categoryId}).lean()
-  let subcategory = await Subcategory.find({category: categoryMale}).select(['subTitle', 'slug']).where({status: 1}).lean()
-  console.log(subcategory);
+  let _id = req.params.id
+  let category = await Category.findOne({slug: _id}).lean()
+  let subcategory = await Subcategory.find({category: category}).select(['subTitle', 'slug']).where({status: 1}).lean()
+  // console.log(subcategory);
   res.send(subcategory)
   // Для получени Субкатегориев в зависимотсти от Категория
 })
 
-// router.get('/getSub/', async(req, res)=>{
-//   let sub = req.query.sub
-//   let subcategory = await Subcategory.findOne({slug: sub}).lean()
-//   let product = await Product.find({subcategory}).select(['title', 'price', 'inside']).where({status: 1}).lean()
-//   product = product.map(prod =>{
-//     prod.img = prod.inside[0].img[0]
-//     prod.color = prod.inside.length
-//     prod.img  = prod.img.split('image\\').join('')
-//     return prod
-//   })
-//   // Для получения Товаров при изменении Субкатегориев
-//   res.send(product)
-// })
+router.get('/getSub/', async(req, res)=>{
+  let sub = req.query.sub
+  let subcategory = await Subcategory.findOne({slug: sub}).lean()
+  let product = await Product.find({subcategory}).select(['title', 'price', 'inside']).where({status: 1}).lean()
+  product = product.map(prod =>{
+    prod.img = prod.inside[0].img[0]
+    prod.color = prod.inside.length
+    prod.img  = prod.img.split('image\\').join('')
+    return prod
+  })
+  // Для получения Товаров при изменении Субкатегориев
+  res.send(product)
+})
 
-// router.get('/:id', async(req, res)=>{
-//   let categoryId = req.params.id
-//   let categoryMale = await Category.findOne({categoryId}).lean()
-//   let subcategory = await Subcategory.find({category: categoryMale._id}).populate('category').lean()
-//   // console.log(categoryId);
-//   let product = await Product.find({subcategory}).select(['title', 'price', 'inside']).where({status: 1}).lean()
-//   product = product.map(prod =>{
-//     prod.img = prod.inside[0].img[0]
-//     prod.color = prod.inside.length
-//     prod.img  = prod.img.split('image\\').join('')
-//     return prod
-//   })
-//   res.send(product)
-//   // Для получения Slug и надлежащик к Категории - Субкатегории и принадлежащие Продукты
-// })
+router.get('/catProducts/:id', async(req, res)=>{
+  let _id = req.params.id
+  let categoryMale = await Category.findOne({slug: _id}).lean()
+  let subcategory = await Subcategory.find({category: categoryMale._id}).lean()
+  console.log(categoryMale._id, '111');
+  let product = await Product.find({subcategory}).select(['title', 'price', 'inside']).where({status: 1}).lean()
+  product = product.map(prod =>{
+    prod.img = prod.inside[0].img[0]
+    prod.color = prod.inside.length
+    prod.img  = prod.img.split('image\\').join('')
+    return prod
+  })
+  res.send(product)
+  // Для получения Slug и надлежащик к Категории - Субкатегории и принадлежащие Продукты
+})
+
 
 
 module.exports = router

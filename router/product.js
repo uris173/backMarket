@@ -49,12 +49,12 @@ router.post('/newproduct', auth, async(req, res) => {
   }
 })
 
-
 router.get('/change/:id', auth, async (req, res) => {
   let _id = req.params.id
   const product = await Product.findOne({_id}).lean()
   res.send(product)
 })
+
 router.post('/changes', auth, upload.fields([{name: 'img', maxCount: 4}]),
   async (req, res) => {
     try {
